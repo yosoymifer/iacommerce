@@ -2,18 +2,13 @@
 FROM node:22-alpine as build-stage
 WORKDIR /app
 
-# Copiar archivos de dependencias
+# Argumentos de build para inyectar variables en Vite
+ARG VITE_OPENAI_API_KEY
+ENV VITE_OPENAI_API_KEY=$VITE_OPENAI_API_KEY
+
 COPY package*.json ./
-
-# Instalar dependencias
 RUN npm install
-
-# Copiar el resto del código fuente
 COPY . .
-
-# Construir la aplicación para producción
-# Nota: Pasamos el API key como ARG si quieres inyectarlo en tiempo de build,
-# pero en EasyPanel puedes usar variables de entorno directamente.
 RUN npm run build
 
 # Etapa 2: Servidor Nginx para servir los estáticos
