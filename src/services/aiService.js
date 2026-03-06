@@ -76,7 +76,7 @@ class AiService {
         if (this.provider === 'openrouter') {
             return 'https://openrouter.ai/api/v1/chat/completions'
         }
-        return 'https://api.openai.com/v1/chat/completions'
+        return '/api/openai/v1/chat/completions'
     }
 
     getHeaders() {
