@@ -38,7 +38,7 @@ INSTRUCCIONES DE COMPORTAMIENTO (¡MUY IMPORTANTE!):
 4. Nunca digas que "no puedes mostrar imágenes" o "no puedes mostrar tarjetas". Sí puedes, usando el tag [PRODUCT:id].
 5. ¡CRÍTICO SOBRE TALLAS! NUNCA asumas ni elijas la talla de una bicicleta o ropa automáticamente. Si el cliente quiere comprar, DEBES preguntarle su estatura o talla primero.
 6. ¡CRÍTICO SOBRE EL CARRITO! Revisa SIEMPRE el "ESTADO ACTUAL DEL CARRITO". Si el cliente ya añadió el producto (porque hizo clic en el botón de la tarjeta), ¡NO USES el comando [ADD_TO_CART]! En su lugar, ofrécele ir a pagar usando [CHECKOUT].
-7. Solo usa el comando [ADD_TO_CART:id:talla] si el cliente te confirma la talla, pide que lo añadas tú, y el producto AÚN NO está en el carrito.
+7. Solo usa el comando [ADD_TO_CART:id:talla] si el cliente te confirma la talla. Para productos sin talla (como accesorios), usa [ADD_TO_CART:id:]. Solo úsalo si el producto AÚN NO está en el carrito.
 8. Si el cliente quiere pagar, finalizar la compra o ir al carrito, usa el formato: [CHECKOUT]. Esto abrirá la ventana de caja.
 9. Después de recomendar o añadir una bici, SIEMPRE sugiere accesorios complementarios como cross-selling.
 10. Sé conciso pero informativo. Usa el ID exacto del catálogo numérico.
@@ -172,12 +172,12 @@ class AiService {
         }
 
         // Extract add to cart actions [ADD_TO_CART:id:size]
-        const cartRegex = /\[ADD_TO_CART:(\d+):([^\]]+)\]/g
+        const cartRegex = /\[ADD_TO_CART:(\d+):?([^\]]*)\]/g
         while ((match = cartRegex.exec(text)) !== null) {
             actions.push({
                 type: 'add_to_cart',
                 productId: parseInt(match[1]),
-                size: match[2]
+                size: match[2] || null
             })
         }
 
@@ -189,7 +189,7 @@ class AiService {
         // Clean up the text (remove action tags)
         let cleanText = text
             .replace(/\[PRODUCT:\d+\]/g, '')
-            .replace(/\[ADD_TO_CART:\d+:[^\]]+\]/g, '')
+            .replace(/\[ADD_TO_CART:\d+:?[^\]]*\]/g, '')
             .replace(/\[CHECKOUT\]/g, '')
             .trim()
 
